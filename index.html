@@ -1,6 +1,971 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIADMK 2026–2031: The Digital Comeback</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Mukta+Malar:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.min.js"></script>
+<style>
+:root{
+  --bg1:#052e16;--bg2:#0d3b1f;--bg3:#14532d;
+  --lime:#84cc16;--lime2:#65a30d;--lime3:#a3e635;
+  --green:#22c55e;--green2:#16a34a;--green3:#4ade80;
+  --gold:#fbbf24;--gold2:#f59e0b;--gold3:#fde68a;
+  --red:#dc2626;--red2:#ef4444;
+  --text:#f0fdf4;--text2:#e9f5c3;--text3:#86efac;
+  --glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.12);
+  --glass-gold:rgba(251,191,36,.07);
+  --border:rgba(255,255,255,.12);--border-gold:rgba(251,191,36,.22);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg1)}
+body{font-family:'Poppins',sans-serif;color:var(--text);cursor:none}
+.tamil{font-family:'Mukta Malar',sans-serif}
+
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cur-r{position:fixed;width:32px;height:32px;border:1.5px solid var(--lime3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s,top .1s}
+#prog{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--lime),var(--gold),var(--lime3));z-index:1001;transition:width .4s ease;box-shadow:0 0 14px var(--gold)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:58px;display:flex;justify-content:space-between;align-items:center;padding:0 40px;background:rgba(5,46,22,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(251,191,36,.15)}
+.nav-l{display:flex;align-items:center;gap:12px}
+.nav-brand{font-size:.8rem;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+.nav-r{display:flex;align-items:center;gap:18px}
+#counter{font-size:.78rem;color:var(--gold3);font-weight:700;letter-spacing:.1em}
+.lbtn{padding:5px 14px;border:1px solid var(--border-gold);background:var(--glass-gold);color:var(--gold3);border-radius:20px;cursor:none;font-size:.73rem;font-family:inherit;transition:all .2s}
+.lbtn:hover{background:var(--gold);border-color:var(--gold);color:var(--bg1)}
+
+#dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:1000;display:flex;flex-direction:column;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);cursor:none;transition:all .3s}
+.dot.on{background:var(--gold);transform:scale(1.6);box-shadow:0 0 8px var(--gold)}
+
+#slides{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+#slides::-webkit-scrollbar{display:none}
+.slide{height:100vh;scroll-snap-align:start;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.bg-a{background:linear-gradient(155deg,#052e16 0%,#0d1800 45%,#1a1000 100%)}
+.bg-b{background:linear-gradient(155deg,#0d3b1f 0%,#080e00 45%,#100a00 100%)}
+.bg-c{background:linear-gradient(155deg,#14532d 0%,#0a1a00 50%,#1a1200 100%)}
+
+/* 58px nav — all content pads from top:58px */
+.si{
+  flex:1;display:flex;flex-direction:column;
+  width:100%;max-width:1220px;margin:0 auto;
+  padding:70px 44px 14px;
+  gap:12px;min-height:0;
+  position:relative;z-index:2;
+}
+.sh{flex-shrink:0;padding-bottom:5px}
+.sh .sec-label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:4px}
+.sh .h2{font-size:clamp(1.25rem,2.2vw,1.85rem);font-weight:800;line-height:1.2}
+.sb{flex:1;min-height:0;display:grid;gap:13px;overflow:hidden}
+
+.anim{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease;transition-delay:var(--d,0s)}
+.anim.r{transform:translateX(-22px)}.anim.l{transform:translateX(22px)}
+.slide.on .anim{opacity:1;transform:translate(0,0)}
+
+.aurora{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.aurora::before,.aurora::after{content:'';position:absolute;border-radius:50%;filter:blur(110px);animation:aur 11s ease-in-out infinite alternate}
+.aurora::before{width:550px;height:380px;background:radial-gradient(circle,rgba(132,204,22,.08),transparent 70%);top:-120px;left:-80px}
+.aurora::after{width:420px;height:350px;background:radial-gradient(circle,rgba(251,191,36,.1),transparent 70%);bottom:-80px;right:-60px;animation-delay:-5.5s}
+@keyframes aur{0%{transform:translate(0,0)}100%{transform:translate(55px,35px)}}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+.mega{font-size:clamp(2rem,4.5vw,4rem);font-weight:900;line-height:1.05;letter-spacing:-.02em}
+.h3{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold3);margin-bottom:9px}
+.para{font-size:.86rem;color:var(--text2);line-height:1.75}
+.lime{color:var(--lime)}.gold{color:var(--gold)}.red{color:var(--red2)}.green{color:var(--green3)}
+
+.gc{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:16px;overflow:hidden;transition:border-color .25s}
+.gc:hover{border-color:var(--border-gold)}
+.gcg{background:var(--glass-gold);border:1px solid var(--border-gold);border-radius:16px;padding:16px;overflow:hidden}
+
+.tw{background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:.78rem}
+.tbl th{padding:9px 14px;text-align:left;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border-bottom:2px solid rgba(251,191,36,.2);background:rgba(0,0,0,.2)}
+.tbl td{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;line-height:1.4}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(251,191,36,.04)}
+.tv{color:var(--red2);font-weight:700}.av{color:var(--lime);font-weight:700}
+
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.63rem;font-weight:700}
+.b-red{background:rgba(239,68,68,.14);color:var(--red2);border:1px solid rgba(239,68,68,.28)}
+.b-lime{background:rgba(132,204,22,.12);color:var(--lime);border:1px solid rgba(132,204,22,.25)}
+.b-gold{background:rgba(251,191,36,.14);color:var(--gold);border:1px solid rgba(251,191,36,.3)}
+.b-green{background:rgba(34,197,94,.12);color:var(--green3);border:1px solid rgba(34,197,94,.25)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:50px;font-weight:800;font-size:.85rem;cursor:none;border:none;transition:all .3s;font-family:inherit}
+.bp{background:linear-gradient(135deg,var(--gold),var(--lime));color:var(--bg1);animation:pg 2.5s infinite}
+.bp:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(251,191,36,.5)}
+@keyframes pg{0%,100%{box-shadow:0 4px 20px rgba(251,191,36,.35)}50%{box-shadow:0 4px 30px rgba(251,191,36,.65)}}
+.bo{background:transparent;color:var(--lime);border:2px solid var(--lime)}
+.bo:hover{background:rgba(132,204,22,.1);transform:translateY(-2px)}
+
+.stat{text-align:center;padding:13px 10px;background:var(--glass-gold);border:1px solid var(--border-gold);border-radius:14px}
+.stat .n{font-size:clamp(1.5rem,2.8vw,2.5rem);font-weight:900;line-height:1;color:var(--gold)}
+.stat .l{font-size:.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+
+/* FULL-HEIGHT LEADER PANELS — COVER ONLY */
+.lp{position:absolute;top:0;bottom:0;width:210px;z-index:1;overflow:hidden}
+.lp-l{left:0}.lp-r{right:0}
+.lp img{width:100%;height:100%;object-fit:cover;object-position:center 10%}
+.lp-l::after,.lp-r::after{content:'';position:absolute;inset:0;pointer-events:none}
+.lp-l::after{background:linear-gradient(to right,rgba(5,46,22,.65) 0%,transparent 55%)}
+.lp-r::after{background:linear-gradient(to left,rgba(5,46,22,.65) 0%,transparent 55%)}
+.lp-cap{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);text-align:center;z-index:3;white-space:nowrap}
+.lp-cap .cn{font-size:.7rem;font-weight:800;color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.9)}
+.lp-cap .cr2{font-size:.58rem;color:var(--text2);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.lp-fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(5,46,22,.9),rgba(26,20,0,.85));font-size:2.5rem;font-weight:900;color:var(--gold)}
+
+/* LEADER CARD — other slides */
+.lc{background:var(--glass);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
+.lc:hover{transform:translateY(-4px);border-color:var(--border-gold);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.lc img{width:100%;height:175px;object-fit:cover;object-position:center 10%}
+.lc .lf{height:175px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:var(--lime)}
+.lb{padding:11px 13px}
+.ln{font-size:.86rem;font-weight:800;margin-bottom:2px}
+.lr{font-size:.68rem;color:var(--text2);margin-bottom:5px}
+
+.wc{background:var(--glass);border:1px solid rgba(239,68,68,.2);border-radius:16px;padding:15px 13px;transition:all .3s;position:relative;overflow:hidden}
+.wc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),var(--red2),transparent)}
+.wc:hover{border-color:rgba(239,68,68,.4);transform:translateY(-3px)}
+.wn{font-size:2.2rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px}
+.wc h4{font-size:.83rem;font-weight:800;margin-bottom:6px}
+.wc p{font-size:.71rem;color:var(--text2);line-height:1.6}
+.fp{display:inline-block;padding:3px 10px;background:rgba(132,204,22,.09);border:1px solid rgba(132,204,22,.22);border-radius:20px;font-size:.62rem;color:var(--lime);margin-top:8px;font-weight:600}
+
+.pl{display:flex;gap:13px;padding:10px 13px;background:var(--glass);border:1px solid var(--border);border-radius:12px;transition:all .25s;align-items:flex-start}
+.pl:hover{background:var(--glass-gold);transform:translateX(4px);border-color:var(--border-gold)}
+.pn{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--lime2));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;flex-shrink:0;color:var(--bg1)}
+.pt h4{font-size:.8rem;font-weight:800;color:var(--gold);margin-bottom:2px}
+.pt p{font-size:.71rem;color:var(--text2);line-height:1.5}
+
+.lane{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:13px;display:flex;flex-direction:column;gap:9px;overflow:hidden}
+.lh{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lh h3{font-size:.88rem;font-weight:800}
+.tl2{list-style:none}
+.tl2 li{font-size:.71rem;color:var(--text2);padding:5px 0 5px 13px;position:relative;border-bottom:1px solid rgba(255,255,255,.05);line-height:1.5}
+.tl2 li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:700}
+
+.kt{background:var(--glass-gold);border:1px solid var(--border-gold);border-radius:14px;padding:13px;text-align:center;transition:all .3s}
+.kt:hover{background:rgba(251,191,36,.12);transform:translateY(-3px)}
+.kt h4{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.kn{font-size:1.85rem;font-weight:900;color:var(--gold)}
+.ks{font-size:.62rem;color:var(--text3)}
+
+.fstep{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fb{height:29px;background:linear-gradient(90deg,var(--gold2),var(--lime));border-radius:0 8px 8px 0;display:flex;align-items:center;padding:0 12px;font-size:.69rem;font-weight:700;color:var(--bg1);width:0;transition:width 1.4s cubic-bezier(.25,.46,.45,.94);white-space:nowrap;overflow:hidden}
+.fl{font-size:.69rem;color:var(--text2);width:72px;text-align:right;flex-shrink:0}
+
+.tl{display:flex;justify-content:space-between;position:relative;padding-top:15px}
+.tl::before{content:'';position:absolute;top:8px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--lime),var(--gold))}
+.ts{text-align:center;position:relative}
+.td{width:13px;height:13px;border-radius:50%;background:var(--gold);margin:0 auto 6px;box-shadow:0 0 10px var(--gold);animation:tdp 2.5s infinite}
+@keyframes tdp{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.4)}50%{box-shadow:0 0 0 7px rgba(251,191,36,0)}}
+.ty{font-size:.66rem;font-weight:800;color:var(--gold)}
+.tdd{font-size:.56rem;color:var(--text2);line-height:1.35;max-width:68px}
+
+.pbr{display:flex;align-items:center;gap:8px;padding:6px 11px;background:var(--glass);border:1px solid var(--border);border-radius:8px;margin-bottom:5px}
+.pbn{width:88px;font-size:.69rem;font-weight:600;color:var(--text2);flex-shrink:0}
+.pbt{flex:1;height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.pbf{height:100%;border-radius:4px;width:0;transition:width 1.4s ease}
+.pbf.tvk{background:linear-gradient(90deg,var(--red),var(--red2))}
+.pbf.ai{background:linear-gradient(90deg,var(--gold2),var(--lime))}
+.pbv{font-size:.61rem;white-space:nowrap}
+
+.mds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mdw{text-align:center}
+.mdw canvas{width:56px!important;height:56px!important}
+.mdw p{font-size:.57rem;color:var(--text2);margin-top:2px}
+
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cd{height:23px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:600}
+.cr{background:rgba(132,204,22,.55);color:var(--bg1)}
+.cp{background:rgba(251,191,36,.5);color:var(--bg1)}
+.cs{background:rgba(74,222,128,.28);color:var(--green3)}
+.cl{background:rgba(239,68,68,.35);color:var(--red2)}
+.co{background:rgba(255,255,255,.04);color:rgba(255,255,255,.18)}
+
+.chk{display:flex;align-items:center;gap:9px;padding:7px 11px;background:var(--glass);border:1px solid var(--border);border-radius:8px;font-size:.74rem;margin-bottom:5px}
+.ci{width:19px;height:19px;border-radius:50%;background:rgba(251,191,36,.14);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:.63rem;flex-shrink:0;color:var(--gold)}
+
+/* VOTER AGE BARS */
+.vbar{display:flex;gap:10px;align-items:center;margin-bottom:7px}
+.vbar-label{font-size:.7rem;width:78px;flex-shrink:0;color:var(--text2)}
+.vbar-track{flex:1;height:26px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden}
+.vbar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:.68rem;font-weight:700;color:var(--bg1);width:0;transition:width 1.5s cubic-bezier(.25,.46,.45,.94)}
+.vbar-fill.vy{background:linear-gradient(90deg,var(--gold),var(--lime))}
+.vbar-fill.vm{background:linear-gradient(90deg,var(--lime2),var(--lime3))}
+.vbar-val{font-size:.66rem;color:var(--gold3);width:68px;text-align:right;flex-shrink:0}
+
+.ai-svg{filter:drop-shadow(0 0 10px rgba(220,38,38,.5))}
+
+@media(max-width:900px){
+  .g2,.g3,.g5{grid-template-columns:1fr!important}
+  .si{padding:62px 18px 10px}
+  .lp{display:none}
+  #dots,#cur,#cur-r{display:none}
+  nav{padding:0 20px}
+  .si{padding-left:18px!important;padding-right:18px!important}
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="cur"></div><div id="cur-r"></div>
+<div id="prog"></div>
+
+<nav>
+  <div class="nav-l">
+    <img src="logo.png" width="38" height="38" style="border-radius:50%;display:block">
+    <span class="nav-brand">AIADMK 2031</span>
+  </div>
+  <div class="nav-r">
+    <span id="counter">01 / 11</span>
+    <button class="lbtn" id="langBtn">தமிழ்</button>
+  </div>
+</nav>
+
+<div id="dots">
+  <div class="dot on" data-i="0"></div><div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div><div class="dot" data-i="3"></div>
+  <div class="dot" data-i="4"></div><div class="dot" data-i="5"></div>
+  <div class="dot" data-i="6"></div><div class="dot" data-i="7"></div>
+  <div class="dot" data-i="8"></div><div class="dot" data-i="9"></div>
+  <div class="dot" data-i="10"></div>
+</div>
+
+<div id="slides">
+
+<!-- S1 COVER -->
+<section class="slide bg-a" id="s1" data-i="0">
+  <div class="aurora"></div>
+
+  <!-- EKP left -->
+  <div class="lp lp-l" id="lp-ekp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Palanisamy.jpg/250px-Palanisamy.jpg" alt="EKP"
+         style="width:100%;height:100%;object-fit:cover;object-position:center 10%"
+         onerror="document.getElementById('lp-ekp').querySelector('.lp-fb').style.display='flex';this.style.display='none'">
+    <div class="lp-fb"><span>EKP</span></div>
+    <div class="lp-cap"><div class="cn">Edappadi K. Palaniswami</div><div class="cr2">General Secretary</div></div>
+  </div>
+
+  <!-- Jayalalithaa right -->
+  <div class="lp lp-r" id="lp-jj">
+    <img src="jayalalithaa.jpg" alt="Jayalalithaa"
+         style="width:100%;height:100%;object-fit:cover;object-position:center 10%"
+         onerror="document.getElementById('lp-jj').querySelector('.lp-fb').style.display='flex';this.style.display='none'">
+    <div class="lp-fb"><span>JJ</span></div>
+    <div class="lp-cap"><div class="cn">J. Jayalalithaa</div><div class="cr2">Eternal Inspiration</div></div>
+  </div>
+
+  <!-- Center -->
+  <div class="si" style="padding-left:224px;padding-right:224px">
+    <div class="sh anim" style="--d:.05s;text-align:center">
+      <img src="logo.png" width="72" height="72" style="margin:0 auto 8px;display:block;border-radius:50%;filter:drop-shadow(0 0 14px rgba(220,38,38,.6))">
+      <div style="font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold3);font-weight:700">All India Anna Dravida Munnetra Kazhagam</div>
+    </div>
+    <div class="sb" style="grid-template-rows:auto auto auto auto;align-content:center;gap:16px">
+      <div class="anim" style="--d:.15s;text-align:center">
+        <div class="mega"><span style="color:var(--gold)">The Comeback</span><br><span class="lime">Blueprint 2031</span></div>
+      </div>
+      <p class="para anim" style="--d:.25s;text-align:center">We lost 2026 on the digital battlefield. The war for 2031 starts today — on every screen, in every village, through every phone.</p>
+      <p class="anim tamil" style="--d:.3s;font-size:1rem;color:var(--gold);font-weight:600;text-align:center">இரண்டிலை மீண்டும் எழும் — 2031 வரை போராடுவோம்</p>
+      <div class="anim" style="--d:.35s;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div class="stat"><div class="n">5</div><div class="l">Years</div></div>
+        <div class="stat"><div class="n" style="color:var(--lime)">6</div><div class="l">Platforms</div></div>
+        <div class="stat"><div class="n">1M+</div><div class="l">Target</div></div>
+        <div class="stat"><div class="n" style="color:var(--lime)">2031</div><div class="l">Victory</div></div>
+      </div>
+      <div class="anim" style="--d:.45s;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn bp" onclick="goTo(1)">Begin Strategy →</button>
+        <button class="btn bo" onclick="goTo(10)">Jump to Roadmap</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 VERDICT -->
+<section class="slide bg-b" id="s2" data-i="1">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 02 — The 2026 Verdict</p>
+      <h2 class="h2">What Happened & <span class="gold">Why We Lost</span></h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim" style="--d:.1s;flex:1;min-height:0">
+          <div class="h3">📊 Vote Share Decline (%)</div>
+          <canvas id="c-vote" style="max-height:145px"></canvas>
+          <p class="para" style="font-size:.74rem;margin-top:8px">AIADMK's vote share <span class="red">fell 40.8% → ~25%</span> — a 15-point drop driven by youth desertion and digital absence.</p>
+        </div>
+        <div class="gcg anim" style="--d:.22s">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="padding:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;text-align:center">
+              <div style="font-size:1.5rem;font-weight:900;color:var(--red2)">3%</div><div style="font-size:.58rem;color:var(--text2)">Our FB Engage</div>
+            </div>
+            <div style="padding:10px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;text-align:center">
+              <div style="font-size:1.5rem;font-weight:900;color:var(--gold)">23%</div><div style="font-size:.58rem;color:var(--text2)">TVK FB Engage</div>
+            </div>
+            <div style="padding:10px;background:rgba(132,204,22,.08);border:1px solid rgba(132,204,22,.2);border-radius:10px;text-align:center">
+              <div style="font-size:1.5rem;font-weight:900;color:var(--lime)">8×</div><div style="font-size:.58rem;color:var(--text2)">Engage Gap</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim l" style="--d:.1s;flex:1;min-height:0">
+          <div class="h3">🪑 2026 Seat Distribution (234 Total)</div>
+          <canvas id="c-seat" style="max-height:180px"></canvas>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" class="anim l" style="--d:.22s">
+          <div class="lc">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Palanisamy.jpg/300px-Palanisamy.jpg" alt="EKP" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+            <div class="lf" style="display:none;background:linear-gradient(135deg,#0f4c1a,#052e16)">EKP</div>
+            <div class="lb"><div class="ln" style="font-size:.8rem">E.K. Palaniswami</div><div class="lr">Opposition Leader</div><div style="font-size:.68rem;color:var(--red2);font-weight:700">Digital: 2/10</div></div>
+          </div>
+          <div class="lc">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/CM_C_Joseph_Vijay_Official_Portrait.jpg/400px-CM_C_Joseph_Vijay_Official_Portrait.jpg" alt="Vijay" onerror="this.style.display='none';this.nextSibling.style.display='flex'" style="object-position:center 8%">
+            <div class="lf" style="display:none;background:linear-gradient(135deg,#3b0e0e,#1a0404)">VJ</div>
+            <div class="lb"><div class="ln" style="font-size:.8rem">Vijay — CM TN</div><div class="lr">TVK, Chief Minister</div><div style="font-size:.68rem;color:var(--lime);font-weight:700">Digital: 9/10</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 VOTER MAP -->
+<section class="slide bg-c" id="s3" data-i="2">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 03 — The Voter Map</p>
+      <h2 class="h2"><span style="color:var(--gold)">5.73 Crore</span> Tamil Nadu Voters — 2031 Projection & Age Analysis</h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1.1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" class="anim" style="--d:.08s">
+          <div class="stat"><div class="n">5.73Cr</div><div class="l">Total Voters 2026</div></div>
+          <div class="stat"><div class="n" style="color:var(--lime)">85.1%</div><div class="l">Turnout (Record)</div></div>
+          <div class="stat"><div class="n">14.6L</div><div class="l">First-Time Voters</div></div>
+        </div>
+        <div class="gc anim" style="--d:.15s;flex:1;min-height:0">
+          <div class="h3">📊 Age-Group Voter Distribution — Tamil Nadu 2026</div>
+          <canvas id="c-age" style="max-height:185px"></canvas>
+          <p class="para" style="font-size:.72rem;margin-top:7px"><span style="color:var(--gold);font-weight:700">★ 20–30 age group: 1.07 Crore (18.7% of electorate)</span> — the swing bloc that swung against us. TVK captured 78% of this group.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim l" style="--d:.12s;flex:1;min-height:0">
+          <div class="h3">📈 Voter Count: 2021 → 2031 Projection</div>
+          <canvas id="c-proj" style="max-height:160px"></canvas>
+          <p class="para" style="font-size:.72rem;margin-top:7px"><span class="lime">~6.35 Crore</span> voters by 2031. The 20–30 age group grows to <span style="color:var(--gold);font-weight:700">~1.35 Crore</span> — our #1 target.</p>
+        </div>
+        <div class="gcg anim l" style="--d:.22s">
+          <div class="h3" style="margin-bottom:10px">🎯 20–30 Yr Breakdown (2026 Actual)</div>
+          <div class="vbar">
+            <span class="vbar-label">18–20 Yrs</span>
+            <div class="vbar-track"><div class="vbar-fill vy" data-w="20">15L</div></div>
+            <span class="vbar-val">~15 Lakh</span>
+          </div>
+          <div class="vbar">
+            <span class="vbar-label">21–25 Yrs</span>
+            <div class="vbar-track"><div class="vbar-fill vy" data-w="56">47L</div></div>
+            <span class="vbar-val">~47 Lakh</span>
+          </div>
+          <div class="vbar">
+            <span class="vbar-label">26–30 Yrs</span>
+            <div class="vbar-track"><div class="vbar-fill vm" data-w="46">45L</div></div>
+            <span class="vbar-val">~45 Lakh</span>
+          </div>
+          <p style="font-size:.66rem;color:var(--gold3);margin-top:8px;font-weight:600">Total 20–30: 1.07 Cr | Women now 51.1% of electorate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 BATTLEFIELD -->
+<section class="slide bg-a" id="s4" data-i="3">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 04 — Digital Battlefield</p>
+      <h2 class="h2"><span class="red">TVK</span> vs <span class="lime">AIADMK</span> — Full Platform Audit</h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1fr 1.05fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="anim" style="--d:.1s;flex:1;min-height:0;display:flex;flex-direction:column">
+          <div class="tw" style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+            <table class="tbl" style="flex:1">
+              <thead><tr><th>Platform</th><th style="color:var(--red2)">TVK</th><th style="color:var(--lime)">AIADMK</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Twitter / X</td><td class="tv">845K</td><td class="av">~73K IT Wing</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+                <tr><td>IG Likes / Post</td><td class="tv">3,400+</td><td style="color:var(--red2);font-weight:700">~39</td><td><span class="badge b-red">🔴 87× gap</span></td></tr>
+                <tr><td>Instagram Followers</td><td class="tv">752K</td><td class="av">171K</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+                <tr><td>Facebook Followers</td><td class="tv">310K</td><td class="av">335K ✓</td><td><span class="badge b-gold">🟡 Wasted</span></td></tr>
+                <tr><td>Facebook Talking %</td><td class="tv">23%</td><td style="color:var(--red2);font-weight:700">~3%</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+                <tr><td>YouTube</td><td class="tv">Branded, Scheduled</td><td style="color:var(--red2);font-weight:700">No Thumbnails</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+                <tr><td>WhatsApp Channel</td><td class="tv">Active ✓</td><td style="color:var(--red2);font-weight:700">None</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="gc anim" style="--d:.2s;flex-shrink:0">
+          <p class="para" style="font-size:.75rem">We <span style="color:var(--gold);font-weight:700">lead on Facebook followers</span> but engagement is 8× lower. 335K silent followers ≠ votes. TVK's 310K talk every single day.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim l" style="--d:.1s;flex:1;min-height:0">
+          <div class="h3">⚔️ Digital Strength Radar</div>
+          <canvas id="c-radar" style="max-height:200px"></canvas>
+        </div>
+        <div class="gc anim l" style="--d:.2s">
+          <div class="h3">📱 Follower Comparison</div>
+          <div class="pbr"><span class="pbn">Twitter/X</span><div class="pbt"><div class="pbf tvk" data-w="100"></div></div><span class="pbv" style="color:var(--red2)">TVK 845K</span></div>
+          <div class="pbr"><span class="pbn">Instagram</span><div class="pbt"><div class="pbf tvk" data-w="80"></div></div><span class="pbv"><span style="color:var(--red2)">TVK 752K</span> / <span class="lime">AI 171K</span></span></div>
+          <div class="pbr"><span class="pbn">Facebook</span><div class="pbt"><div class="pbf ai" data-w="100"></div></div><span class="pbv" style="color:var(--gold)">AI 335K ✓</span></div>
+          <div class="mds" style="margin-top:8px">
+            <div class="mdw"><canvas id="md1" width="56" height="56"></canvas><p>YouTube</p></div>
+            <div class="mdw"><canvas id="md2" width="56" height="56"></canvas><p>Instagram</p></div>
+            <div class="mdw"><canvas id="md3" width="56" height="56"></canvas><p>Facebook</p></div>
+            <div class="mdw"><canvas id="md4" width="56" height="56"></canvas><p>Twitter</p></div>
+            <div class="mdw"><canvas id="md5" width="56" height="56"></canvas><p>IT Wing</p></div>
+            <div class="mdw"><canvas id="md6" width="56" height="56"></canvas><p>WhatsApp</p></div>
+          </div>
+          <p style="font-size:.57rem;color:var(--text2);margin-top:4px;text-align:center"><span class="gold">■</span> AIADMK &nbsp;<span class="red">■</span> TVK</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 FIVE WOUNDS -->
+<section class="slide bg-b" id="s5" data-i="4">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim">
+      <p class="sec-label">Slide 05 — Diagnostic Audit</p>
+      <h2 class="h2">The <span class="red">5 Critical Wounds</span> — Root Cause Analysis</h2>
+    </div>
+    <div class="sb g5" style="grid-template-columns:repeat(5,1fr)">
+      <div class="wc anim" style="--d:.04s">
+        <div class="wn">01</div><h4>No YouTube Thumbnails</h4>
+        <p>Every video shows grey defaults. Kills CTR by 70% before anyone clicks. Costs ₹0 to fix, loses thousands of viewers daily.</p>
+        <canvas id="wc1" height="58" style="margin-top:8px;width:100%"></canvas>
+        <div class="fp">→ 1 designer, fixed in week 1</div>
+      </div>
+      <div class="wc anim" style="--d:.09s">
+        <div class="wn">02</div><h4>Instagram Spam Syndrome</h4>
+        <p>4,358 posts → 39 avg likes. TVK: 217 posts → 3,400 avg likes. More posts = algorithm burial. Volume kills reach.</p>
+        <canvas id="wc2" height="58" style="margin-top:8px;width:100%"></canvas>
+        <div class="fp">→ Delete, rebuild with quality</div>
+      </div>
+      <div class="wc anim" style="--d:.14s">
+        <div class="wn">03</div><h4>Facebook Ghost Town</h4>
+        <p>335K followers, 3% talking. Facebook stops showing our posts even to our own followers. Invisible to people who already follow us.</p>
+        <canvas id="wc3" height="58" style="margin-top:8px;width:100%"></canvas>
+        <div class="fp">→ Lives + long-form Tamil posts</div>
+      </div>
+      <div class="wc anim" style="--d:.19s">
+        <div class="wn">04</div><h4>Reactive Twitter</h4>
+        <p>90% tweets are responses to TVK narratives. We never set the agenda. Defending instead of attacking. Zero original campaigns in 2026.</p>
+        <canvas id="wc4" height="58" style="margin-top:8px;width:100%"></canvas>
+        <div class="fp">→ Daily 7AM brief + rapid team</div>
+      </div>
+      <div class="wc anim" style="--d:.24s">
+        <div class="wn">05</div><h4>Zero WhatsApp Game</h4>
+        <p>70M+ WhatsApp users in TN. TVK runs active broadcast channels reaching millions. We have zero channels, zero reach, zero strategy.</p>
+        <div style="text-align:center;padding:8px 0">
+          <div style="font-size:2.6rem;font-weight:900;color:var(--gold)">0</div>
+          <div style="font-size:.63rem;color:var(--text2)">Broadcast Channels</div>
+        </div>
+        <div class="fp">→ 234-district network, now</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 TVK PLAYBOOK -->
+<section class="slide bg-a" id="s6" data-i="5">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 06 — Competitive Intel</p>
+      <h2 class="h2">TVK's <span class="gold">Winning Playbook</span> — What We Must Copy</h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1.1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="anim" style="--d:.1s;flex:1;min-height:0;display:flex;flex-direction:column">
+          <div class="tw" style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+            <table class="tbl" style="flex:1">
+              <thead><tr><th>Tactic</th><th style="color:var(--red2)">TVK</th><th style="color:var(--lime)">AIADMK</th></tr></thead>
+              <tbody>
+                <tr><td>Content Style</td><td class="tv">Film-promo Reels, 60s</td><td style="color:var(--red2)">Press release PDFs</td></tr>
+                <tr><td>Volunteer Network</td><td class="tv">Fan clubs → digital army</td><td style="color:var(--red2)">Untrained cadre</td></tr>
+                <tr><td>Youth Targeting</td><td class="tv">Memes, polls, Q&A</td><td style="color:var(--red2)">Formal speeches only</td></tr>
+                <tr><td>WhatsApp Strategy</td><td class="tv">Active broadcast channels</td><td style="color:var(--red2)">None whatsoever</td></tr>
+                <tr><td>Posting Discipline</td><td class="tv">2 quality posts/day</td><td style="color:var(--red2)">12+ spam posts/day</td></tr>
+                <tr><td>Language</td><td class="tv">100% Tamil-first</td><td style="color:var(--red2)">Mixed, formal tone</td></tr>
+                <tr><td>Analytics Use</td><td class="tv">Weekly dashboards</td><td style="color:var(--red2)">None</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" class="anim" style="--d:.2s">
+          <div style="text-align:center;padding:10px;background:var(--glass);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:1.5rem;font-weight:900;color:var(--red2)">217</div><div style="font-size:.6rem;color:var(--text2)">TVK Posts</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:var(--glass-gold);border:1px solid var(--border-gold);border-radius:12px">
+            <div style="font-size:1.5rem;font-weight:900;color:var(--gold)">3,400</div><div style="font-size:.6rem;color:var(--text2)">TVK Avg Likes</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:var(--glass);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:1.5rem;font-weight:900;color:var(--lime)">39</div><div style="font-size:.6rem;color:var(--text2)">Our Avg Likes</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim l" style="--d:.1s">
+          <div class="h3">📊 TVK Content Mix</div>
+          <canvas id="c-tvkpie" style="max-height:170px"></canvas>
+        </div>
+        <div class="gc anim l" style="--d:.2s">
+          <div class="h3">🔻 TVK Content → Ground Funnel</div>
+          <div class="fstep"><span class="fl">YouTube</span><div class="fb" data-w="100">2.1M Views / Month</div></div>
+          <div class="fstep"><span class="fl">Instagram</span><div class="fb" data-w="78">752K Followers</div></div>
+          <div class="fstep"><span class="fl">WhatsApp</span><div class="fb" data-w="56">5M HH Reach</div></div>
+          <div class="fstep"><span class="fl">Field</span><div class="fb" data-w="36">Volunteer Army</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 5P FRAMEWORK -->
+<section class="slide bg-b" id="s7" data-i="6">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 07 — Our Strategy</p>
+      <h2 class="h2">The <span class="lime">5P Recovery Framework</span></h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:8px;overflow:hidden">
+        <div class="pl anim" style="--d:.04s"><div class="pn">P1</div><div class="pt"><h4>PEOPLE — Restructure IT Wing</h4><p>5 specialist pods: content creators, rapid-response, analytics, youth coordinators, regional leads.</p></div></div>
+        <div class="pl anim" style="--d:.09s"><div class="pn">P2</div><div class="pt"><h4>PLATFORM — Fix Core Hygiene</h4><p>YouTube thumbnails week 1. Instagram cleanup month 2. Brand kit across all platforms.</p></div></div>
+        <div class="pl anim" style="--d:.14s"><div class="pn">P3</div><div class="pt"><h4>POSTS — Quality Over Volume</h4><p>From 12 posts/day to 2 quality posts. Tamil-first content calendar. Every post earns its slot.</p></div></div>
+        <div class="pl anim" style="--d:.19s"><div class="pn">P4</div><div class="pt"><h4>PUSH — WhatsApp Broadcast Network</h4><p>234 constituency broadcast groups. 5M household cascade reach by month 12. Daily 7 AM Morning Card.</p></div></div>
+        <div class="pl anim" style="--d:.24s"><div class="pn">P5</div><div class="pt"><h4>PROOF — Weekly Analytics</h4><p>Public dashboard every Monday. Only reach, engagement, and ground conversion count. No vanity metrics.</p></div></div>
+        <div class="tl anim" style="--d:.34s">
+          <div class="ts"><div class="td"></div><div class="ty">Q3'26</div><div class="tdd">Platform Hygiene</div></div>
+          <div class="ts"><div class="td"></div><div class="ty">Q1'27</div><div class="tdd">Content Engine</div></div>
+          <div class="ts"><div class="td"></div><div class="ty">Q3'27</div><div class="tdd">Broadcast Net</div></div>
+          <div class="ts"><div class="td"></div><div class="ty">2029</div><div class="tdd">Youth Wing</div></div>
+          <div class="ts"><div class="td"></div><div class="ty">2031</div><div class="tdd">Victory</div></div>
+        </div>
+      </div>
+      <div class="gc anim l" style="--d:.1s;display:flex;flex-direction:column">
+        <div class="h3">📈 Current vs 2031 Target (5P Radar)</div>
+        <canvas id="c-p5radar" style="flex:1;min-height:0;max-height:310px"></canvas>
+        <p class="para" style="font-size:.72rem;margin-top:8px"><span class="red">■ Red</span> = today. <span class="gold">■ Gold dashed</span> = 2031 target. The gap is the work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S8 YOUTUBE -->
+<section class="slide bg-a" id="s8" data-i="7">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 08 — Platform Fix #1</p>
+      <h2 class="h2">YouTube: <span class="gold">From Invisible to Unmissable</span></h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim" style="--d:.1s;flex:1;min-height:0">
+          <div class="h3">📈 Subscriber Growth Projection</div>
+          <canvas id="c-ytgrow" style="max-height:150px"></canvas>
+          <p class="para" style="font-size:.72rem;margin-top:8px"><span class="lime">Act now:</span> 1M subs by 2031. <span class="red">Do nothing:</span> irrelevance. Gap = <strong class="gold">900K+ subscribers.</strong></p>
+        </div>
+        <div class="gc anim" style="--d:.2s">
+          <div class="h3">🎯 CTR: Default vs Branded Thumbnail</div>
+          <canvas id="c-ctr" style="max-height:82px"></canvas>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="anim l" style="--d:.1s;flex:1;min-height:0;display:flex;flex-direction:column">
+          <div class="tw" style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+            <table class="tbl" style="flex:1">
+              <thead><tr><th>Action</th><th>Timeline</th><th>Impact</th></tr></thead>
+              <tbody>
+                <tr><td>Custom thumbnails on all videos</td><td class="av">Week 1</td><td class="av">+70% CTR</td></tr>
+                <tr><td>Brand kit (colors, fonts, logo)</td><td class="av">Week 2</td><td class="av">Identity</td></tr>
+                <tr><td>Upload Mon/Wed/Fri 7PM</td><td class="av">Month 1</td><td class="av">Algorithm</td></tr>
+                <tr><td>3 YouTube Shorts/day</td><td class="av">Month 1</td><td class="av">3× discovery</td></tr>
+                <tr><td>Tamil subtitles on every video</td><td class="av">Month 2</td><td class="av">SEO + Access</td></tr>
+                <tr><td>Hire dedicated video editor</td><td class="av">Month 1</td><td class="av">Consistency</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="anim l" style="--d:.2s">
+          <div class="chk"><div class="ci">✓</div>Hire 1 thumbnail designer (full-time, immediate)</div>
+          <div class="chk"><div class="ci">✓</div>Upload Mon / Wed / Fri at 7 PM TN prime time</div>
+          <div class="chk"><div class="ci">✓</div>Tamil subtitles on every video — SEO + access</div>
+          <div class="chk"><div class="ci">✓</div>Custom branded intro: 3 seconds, party logo</div>
+          <div class="chk"><div class="ci">✓</div>End-screen CTA → WhatsApp broadcast channel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S9 INSTAGRAM -->
+<section class="slide bg-b" id="s9" data-i="8">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 09 — Platform Fix #2</p>
+      <h2 class="h2">Instagram: <span class="lime">Kill the Spam, Build the Brand</span></h2>
+    </div>
+    <div class="sb g2" style="grid-template-columns:1fr 1fr">
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim" style="--d:.1s;flex:1;min-height:0">
+          <div class="h3">📊 Posts vs Avg Engagement (The Spam Problem)</div>
+          <canvas id="c-scatter" style="max-height:150px"></canvas>
+          <p class="para" style="font-size:.72rem;margin-top:8px"><span class="red">AIADMK: 4,358 posts → 39 avg likes</span>. <span class="lime">TVK: 217 posts → 3,400 avg likes</span>. More posts = lower reach.</p>
+        </div>
+        <div class="gc anim" style="--d:.2s">
+          <div class="h3">🎨 Proposed Reel Theme Mix</div>
+          <canvas id="c-reelpie" style="max-height:115px"></canvas>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+        <div class="gc anim l" style="--d:.1s">
+          <div class="h3">30-Day Content Calendar</div>
+          <div class="cal" id="cal-grid"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+            <div style="display:flex;align-items:center;gap:4px;font-size:.58rem;color:var(--text2)"><div style="width:8px;height:8px;border-radius:2px;background:rgba(132,204,22,.55)"></div>Reels</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:.58rem;color:var(--text2)"><div style="width:8px;height:8px;border-radius:2px;background:rgba(251,191,36,.5)"></div>Post</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:.58rem;color:var(--text2)"><div style="width:8px;height:8px;border-radius:2px;background:rgba(74,222,128,.28)"></div>Story</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:.58rem;color:var(--text2)"><div style="width:8px;height:8px;border-radius:2px;background:rgba(239,68,68,.35)"></div>Live</div>
+          </div>
+        </div>
+        <div class="anim l" style="--d:.2s;flex:1;min-height:0;display:flex;flex-direction:column">
+          <div class="tw" style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+            <table class="tbl" style="flex:1">
+              <thead><tr><th>Action</th><th>Target</th></tr></thead>
+              <tbody>
+                <tr><td>Delete low-quality old posts</td><td class="av">Month 1–2</td></tr>
+                <tr><td>Post count target (TVK parity)</td><td class="av">~220 posts</td></tr>
+                <tr><td>Daily Reels (≤60 sec, Tamil-first)</td><td class="av">1/day</td></tr>
+                <tr><td>Stories per day</td><td class="av">3–5</td></tr>
+                <tr><td>Target engagement rate</td><td class="av">3%+</td></tr>
+                <tr><td>12-month follower target</td><td class="av">950K+</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="gc anim l" style="--d:.3s">
+          <div class="h3">📈 12-Month Follower Projection</div>
+          <canvas id="c-iggrow" style="max-height:72px"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S10 THREE PLATFORMS -->
+<section class="slide bg-a" id="s10" data-i="9">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim r">
+      <p class="sec-label">Slide 10 — Platform Fixes #3 #4 #5</p>
+      <h2 class="h2">Twitter · Facebook · <span class="lime">WhatsApp</span></h2>
+    </div>
+    <div class="sb g3" style="grid-template-columns:repeat(3,1fr)">
+      <div class="lane anim" style="--d:.1s">
+        <div class="lh"><span style="font-size:1.2rem">🐦</span><h3 style="color:var(--lime)">Twitter / X</h3><span class="badge b-red" style="margin-left:auto">Reactive</span></div>
+        <canvas id="c-tw" style="max-height:95px"></canvas>
+        <div class="tw" style="flex-shrink:0">
+          <table class="tbl"><tbody>
+            <tr><td>Current followers</td><td style="color:var(--red2);font-weight:700">~73K (IT Wing)</td></tr>
+            <tr><td>TVK followers</td><td class="tv">845K</td></tr>
+            <tr><td>Tweet style</td><td style="color:var(--red2);font-weight:700">90% Reactive</td></tr>
+            <tr><td>2031 goal</td><td class="av">845K+ match TVK</td></tr>
+          </tbody></table>
+        </div>
+        <ul class="tl2">
+          <li>Daily 7 AM "Morning Brief" thread</li>
+          <li>5-person rapid response cell (15-min SLA)</li>
+          <li>Wednesday evening hashtag campaigns</li>
+          <li>20 micro-influencer alliance on retainer</li>
+        </ul>
+      </div>
+      <div class="lane anim" style="--d:.2s">
+        <div class="lh"><span style="font-size:1.2rem">📘</span><h3 style="color:var(--gold)">Facebook</h3><span class="badge b-gold" style="margin-left:auto">3%→23%</span></div>
+        <canvas id="c-fb" style="max-height:95px"></canvas>
+        <div class="tw" style="flex-shrink:0">
+          <table class="tbl"><tbody>
+            <tr><td>Followers</td><td class="av">335K (we lead!)</td></tr>
+            <tr><td>Talking %</td><td style="color:var(--red2);font-weight:700">~3% vs TVK 23%</td></tr>
+            <tr><td>Weekly Lives</td><td style="color:var(--red2);font-weight:700">0 currently</td></tr>
+            <tr><td>Constituency groups</td><td style="color:var(--red2);font-weight:700">0 currently</td></tr>
+          </tbody></table>
+        </div>
+        <ul class="tl2">
+          <li>1 long-form Tamil post/day (500+ words)</li>
+          <li>EKP weekly Live Q&A sessions</li>
+          <li>234 constituency Facebook groups</li>
+          <li>MGR/Jayalalithaa nostalgia content</li>
+        </ul>
+      </div>
+      <div class="lane anim" style="--d:.3s">
+        <div class="lh"><span style="font-size:1.2rem">💬</span><h3 style="color:var(--lime)">WhatsApp</h3><span class="badge b-lime" style="margin-left:auto">Zero→5M</span></div>
+        <canvas id="c-wa" style="max-height:95px"></canvas>
+        <div class="tw" style="flex-shrink:0">
+          <table class="tbl"><tbody>
+            <tr><td>Current channels</td><td style="color:var(--red2);font-weight:700">0 (zero)</td></tr>
+            <tr><td>TVK status</td><td class="tv">Active ✓</td></tr>
+            <tr><td>Districts to cover</td><td class="av">234</td></tr>
+            <tr><td>12-month target</td><td class="av">5M+ HH reach</td></tr>
+          </tbody></table>
+        </div>
+        <ul class="tl2">
+          <li>Official verified WhatsApp Channel launch</li>
+          <li>234 constituency broadcast groups</li>
+          <li>Daily 7 AM "Morning Card" every day</li>
+          <li>Telegram mirror channel for diaspora</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S11 ROADMAP -->
+<section class="slide bg-b" id="s11" data-i="10">
+  <div class="aurora"></div>
+  <div class="si">
+    <div class="sh anim">
+      <p class="sec-label">Slide 11 — The Master Plan</p>
+      <h2 class="h2">2026 → 2031: <span class="gold">The Comeback Roadmap</span></h2>
+    </div>
+    <div class="sb" style="grid-template-rows:auto 1fr auto;gap:12px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" class="anim" style="--d:.08s">
+        <div class="kt"><div style="font-size:1rem;margin-bottom:3px">📺</div><h4>YouTube</h4><div class="kn" data-t="1000" data-s="K">0</div><div class="ks">Subscribers target</div><canvas id="kpi1" style="max-height:38px;margin-top:5px"></canvas></div>
+        <div class="kt"><div style="font-size:1rem;margin-bottom:3px">📸</div><h4>Instagram</h4><div class="kn" data-t="1" data-s="M+">0</div><div class="ks">Followers (from 171K)</div><canvas id="kpi2" style="max-height:38px;margin-top:5px"></canvas></div>
+        <div class="kt"><div style="font-size:1rem;margin-bottom:3px">📘</div><h4>FB Engagement</h4><div class="kn" data-t="23" data-s="%">0</div><div class="ks">Talking rate (from 3%)</div><canvas id="kpi3" style="max-height:38px;margin-top:5px"></canvas></div>
+        <div class="kt"><div style="font-size:1rem;margin-bottom:3px">💬</div><h4>WhatsApp</h4><div class="kn" data-t="5" data-s="M HH">0</div><div class="ks">Household reach</div><canvas id="kpi4" style="max-height:38px;margin-top:5px"></canvas></div>
+      </div>
+      <div class="gc anim" style="--d:.18s;min-height:0">
+        <div class="h3">📅 5-Year Milestone Roadmap</div>
+        <canvas id="c-road" style="max-height:125px"></canvas>
+      </div>
+      <div class="gcg anim" style="--d:.28s;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center">
+        <div>
+          <h2 class="tamil" style="font-size:1.35rem;color:var(--gold);margin-bottom:5px">இரண்டிலை மீண்டும் ஆட்சிக்கு வரும்</h2>
+          <p class="para" style="font-size:.8rem">The two leaves will rule again. The 1.35 Crore voters turning 20–30 by 2031 — that is our battlefield. Every day of delay is a vote lost.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="text-align:center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Palanisamy.jpg/150px-Palanisamy.jpg" style="width:70px;height:70px;border-radius:50%;object-fit:cover;object-position:center 15%;border:2.5px solid var(--gold);box-shadow:0 0 14px rgba(251,191,36,.5)" onerror="this.style.display='none'">
+            <div style="font-size:.6rem;color:var(--gold);margin-top:4px;font-weight:700">EKP</div>
+          </div>
+          <div style="text-align:center">
+            <img src="jayalalithaa.jpg" style="width:70px;height:70px;border-radius:50%;object-fit:cover;object-position:center 10%;border:2.5px solid var(--lime);box-shadow:0 0 14px rgba(132,204,22,.5)" onerror="this.style.display='none'">
+            <div style="font-size:.6rem;color:var(--lime);margin-top:4px;font-weight:700">Amma</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn bp" onclick="window.print()" style="padding:9px 20px;font-size:.78rem">Download Plan</button>
+            <button class="btn bo" onclick="goTo(0)" style="padding:9px 20px;font-size:.78rem">↩ Restart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function lp(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(lp)})();
+
+const pc=document.getElementById('particles'),px=pc.getContext('2d');
+function rsz(){pc.width=innerWidth;pc.height=innerHeight}rsz();window.addEventListener('resize',rsz);
+const pts=Array.from({length:40},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.5+.4,dx:(Math.random()-.5)*.18,dy:-Math.random()*.25-.04,o:Math.random()*.2+.05,gold:Math.random()>.5}));
+(function dp(){px.clearRect(0,0,pc.width,pc.height);pts.forEach(p=>{px.beginPath();px.arc(p.x,p.y,p.r,0,Math.PI*2);px.fillStyle=p.gold?`rgba(251,191,36,${p.o})`:`rgba(132,204,22,${p.o})`;px.fill();p.x+=p.dx;p.y+=p.dy;if(p.y<-10){p.y=pc.height+10;p.x=Math.random()*pc.width}if(p.x<0||p.x>pc.width)p.dx*=-1});requestAnimationFrame(dp)})();
+
+const TOTAL=11;
+const scr=document.getElementById('slides'),slideEls=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.dot');
+let ci=0;const inited=new Set();
+function goTo(i){scr.scrollTo({top:i*innerHeight,behavior:'smooth'})}
+dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.i)));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();goTo(Math.min(ci+1,TOTAL-1))}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(Math.max(ci-1,0))}
+});
+
+Chart.defaults.color='rgba(253,230,138,.8)';
+Chart.defaults.borderColor='rgba(255,255,255,.07)';
+Chart.defaults.font.family='Poppins';Chart.defaults.font.size=10;
+function mkG(ctx,c1,c2,h){const g=ctx.createLinearGradient(0,0,0,h||200);g.addColorStop(0,c1);g.addColorStop(1,c2);return g}
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const i=+e.target.dataset.i;
+    e.target.classList.add('on');
+    ci=i;
+    dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+    document.getElementById('counter').textContent=String(i+1).padStart(2,'0')+' / '+TOTAL;
+    document.getElementById('prog').style.width=((i+1)/TOTAL*100)+'%';
+    if(!inited.has(i)){inited.add(i);initSlide(i)}
+  });
+},{root:scr,threshold:.45});
+slideEls.forEach(s=>obs.observe(s));
+
+function initSlide(i){[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10][i]?.()}
+
+function s0(){}
+
+// S2 — Verdict charts
+function s1(){
+  const c1=document.getElementById('c-vote').getContext('2d');
+  new Chart(c1,{type:'bar',data:{labels:['2016','2021','2026'],datasets:[{data:[40.8,33.3,25],backgroundColor:[mkG(c1,'#fbbf24','#92400e',140),mkG(c1,'#84cc16','#365314',140),mkG(c1,'#ef4444','#7f1d1d',140)],borderRadius:9,borderSkipped:false}]},options:{plugins:{legend:{display:false}},scales:{y:{min:0,max:50,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},animation:{duration:1400}}});
+  const c2=document.getElementById('c-seat').getContext('2d');
+  new Chart(c2,{type:'doughnut',data:{labels:['TVK+Alliance','AIADMK','DMK','Others'],datasets:[{data:[135,60,25,14],backgroundColor:['rgba(239,68,68,.85)','rgba(251,191,36,.85)','rgba(132,204,22,.7)','rgba(74,222,128,.4)'],borderColor:'rgba(0,0,0,.3)',borderWidth:2,hoverOffset:6}]},options:{cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8}}},animation:{duration:1400}}});
+}
+
+// S3 — Voter map charts
+function s2(){
+  const ca=document.getElementById('c-age').getContext('2d');
+  new Chart(ca,{type:'bar',data:{
+    labels:['18–19','20–30 ★','31–40','41–50','51–60','60+'],
+    datasets:[{
+      label:'Voters (Lakh)',
+      data:[15,107,116,119,75,70],
+      backgroundColor:['rgba(132,204,22,.55)','rgba(251,191,36,1)','rgba(132,204,22,.65)','rgba(132,204,22,.5)','rgba(132,204,22,.38)','rgba(132,204,22,.28)'],
+      borderRadius:8,borderSkipped:false,
+      borderColor:['transparent','rgba(251,191,36,1)','transparent','transparent','transparent','transparent'],
+      borderWidth:[0,3,0,0,0,0]
+    }]
+  },options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw} Lakh voters`}}},scales:{y:{ticks:{callback:v=>v+'L'},grid:{color:'rgba(255,255,255,.05)'}},x:{grid:{display:false}}},animation:{duration:1400}}});
+
+  const cp=document.getElementById('c-proj').getContext('2d');
+  const g1=mkG(cp,'rgba(251,191,36,.5)','rgba(251,191,36,0)',165);
+  const g2=mkG(cp,'rgba(132,204,22,.4)','rgba(132,204,22,0)',165);
+  new Chart(cp,{type:'line',data:{
+    labels:['2021','2024','2026','2028','2031'],
+    datasets:[
+      {label:'Total Voters (Cr)',data:[4.8,5.4,5.73,6.05,6.35],borderColor:'#fbbf24',backgroundColor:g1,fill:true,tension:.4,pointBackgroundColor:'#fbbf24',borderWidth:2.5,yAxisID:'y'},
+      {label:'20–30 Group (Cr)',data:[.95,1.01,1.07,1.21,1.35],borderColor:'#84cc16',backgroundColor:g2,fill:true,tension:.4,pointBackgroundColor:'#84cc16',borderWidth:2,borderDash:[4,4],yAxisID:'y2'}
+    ]
+  },options:{plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:10}}},scales:{y:{ticks:{callback:v=>v+'Cr'},title:{display:false}},y2:{position:'right',ticks:{callback:v=>v+'Cr'},grid:{drawOnChartArea:false}}},animation:{duration:1500}}});
+
+  setTimeout(()=>document.querySelectorAll('.vbar-fill').forEach(b=>{b.style.width=b.dataset.w+'%'}),400);
+}
+
+// S4 — Battlefield charts
+function s3(){
+  const c=document.getElementById('c-radar').getContext('2d');
+  new Chart(c,{type:'radar',data:{labels:['YouTube','Instagram','IT Wing','Facebook','Twitter','WhatsApp'],datasets:[{label:'TVK',data:[85,95,90,78,100,95],borderColor:'rgba(239,68,68,.9)',backgroundColor:'rgba(239,68,68,.1)',pointBackgroundColor:'#ef4444',borderWidth:2},{label:'AIADMK',data:[18,22,18,44,15,0],borderColor:'rgba(251,191,36,.9)',backgroundColor:'rgba(251,191,36,.08)',pointBackgroundColor:'#fbbf24',borderWidth:2}]},options:{scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{font:{size:9}}}},plugins:{legend:{position:'bottom',labels:{padding:8}}},animation:{duration:1500}}});
+  const mdData=[[18,82],[22,78],[44,56],[15,85],[15,85],[0,100]];
+  ['md1','md2','md3','md4','md5','md6'].forEach((id,i)=>{
+    const ctx=document.getElementById(id).getContext('2d');
+    new Chart(ctx,{type:'doughnut',data:{datasets:[{data:mdData[i],backgroundColor:['rgba(251,191,36,.85)','rgba(239,68,68,.4)'],borderWidth:0}]},options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800+i*120}}});
+  });
+  document.querySelectorAll('.pbf').forEach(b=>{setTimeout(()=>{b.style.width=b.dataset.w+'%'},400)});
+}
+
+// S5 — Wound charts
+function s4(){
+  new Chart(document.getElementById('wc1').getContext('2d'),{type:'bar',data:{labels:['Default','Custom'],datasets:[{data:[2,8],backgroundColor:['rgba(239,68,68,.65)','rgba(251,191,36,.9)'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{max:12,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},animation:{duration:900}}});
+  new Chart(document.getElementById('wc2').getContext('2d'),{type:'bar',data:{labels:['AIADMK','TVK'],datasets:[{data:[39,3400],backgroundColor:['rgba(239,68,68,.7)','rgba(251,191,36,.9)'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v>999?Math.round(v/1000)+'K':v}},x:{grid:{display:false}}},animation:{duration:900}}});
+  new Chart(document.getElementById('wc3').getContext('2d'),{type:'doughnut',data:{datasets:[{data:[3,97],backgroundColor:['rgba(251,191,36,.9)','rgba(239,68,68,.2)'],borderWidth:0}]},options:{cutout:'70%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:1000}}});
+  new Chart(document.getElementById('wc4').getContext('2d'),{type:'bar',data:{labels:['Reactive','Proactive'],datasets:[{data:[90,10],backgroundColor:['rgba(239,68,68,.7)','rgba(132,204,22,.7)'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{max:100,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},animation:{duration:900}}});
+}
+
+// S6 — TVK playbook
+function s5(){
+  new Chart(document.getElementById('c-tvkpie').getContext('2d'),{type:'doughnut',data:{labels:['Reels 45%','Long Video 20%','Photos 15%','Stories 12%','Lives 8%'],datasets:[{data:[45,20,15,12,8],backgroundColor:['rgba(239,68,68,.9)','rgba(239,68,68,.7)','rgba(248,113,113,.55)','rgba(252,165,165,.4)','rgba(254,202,202,.3)'],borderColor:'rgba(0,0,0,.25)',borderWidth:1,hoverOffset:5}]},options:{cutout:'50%',plugins:{legend:{position:'right',labels:{boxWidth:9,padding:7,font:{size:9}}}},animation:{duration:1300}}});
+  setTimeout(()=>document.querySelectorAll('.fb').forEach(b=>{b.style.width=b.dataset.w+'%'}),400);
+}
+
+// S7 — 5P radar
+function s6(){
+  new Chart(document.getElementById('c-p5radar').getContext('2d'),{type:'radar',data:{labels:['People','Platform','Posts','Push','Proof'],datasets:[{label:'Current',data:[15,10,20,0,10],borderColor:'rgba(239,68,68,.85)',backgroundColor:'rgba(239,68,68,.08)',borderWidth:2},{label:'2031 Target',data:[90,95,85,90,88],borderColor:'rgba(251,191,36,.9)',backgroundColor:'rgba(251,191,36,.07)',borderWidth:2,borderDash:[5,5]}]},options:{scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{padding:8}}},animation:{duration:1600}}});
+}
+
+// S8 — YouTube
+function s7(){
+  const ctx=document.getElementById('c-ytgrow').getContext('2d');
+  new Chart(ctx,{type:'line',data:{labels:['Now',"Q4'26","Q2'27","Q4'27","Q2'28","Q4'28",'2031'],datasets:[{label:'If We Act',data:[50,85,160,270,450,680,1000],borderColor:'#fbbf24',backgroundColor:mkG(ctx,'rgba(251,191,36,.45)','rgba(251,191,36,0)',150),fill:true,tension:.4,pointBackgroundColor:'#fbbf24',borderWidth:2.5},{label:'If We Don\'t',data:[50,50,47,43,40,37,30],borderColor:'#ef4444',backgroundColor:mkG(ctx,'rgba(239,68,68,.22)','rgba(239,68,68,0)',150),fill:true,tension:.4,pointBackgroundColor:'#ef4444',borderWidth:2,borderDash:[5,5]}]},options:{plugins:{legend:{position:'bottom',labels:{padding:8}}},scales:{y:{ticks:{callback:v=>v+'K'}},x:{grid:{display:false}}},animation:{duration:1400}}});
+  new Chart(document.getElementById('c-ctr').getContext('2d'),{type:'bar',data:{labels:['Default Thumbnail','Branded Thumbnail'],datasets:[{data:[2,8],backgroundColor:['rgba(239,68,68,.7)','rgba(251,191,36,.9)'],borderRadius:8,borderSkipped:false}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:12,ticks:{callback:v=>v+'% CTR'}},y:{grid:{display:false}}},animation:{duration:1000}}});
+}
+
+// S9 — Instagram
+function s8(){
+  buildCal();
+  new Chart(document.getElementById('c-scatter').getContext('2d'),{type:'scatter',data:{datasets:[{label:'AIADMK (problem)',data:[{x:4358,y:39}],backgroundColor:'rgba(239,68,68,.9)',pointRadius:14,pointHoverRadius:18},{label:'TVK (target)',data:[{x:217,y:3400}],backgroundColor:'rgba(251,191,36,.9)',pointRadius:14,pointHoverRadius:18}]},options:{plugins:{legend:{position:'bottom',labels:{padding:8}}},scales:{x:{title:{display:true,text:'Total Posts'}},y:{title:{display:true,text:'Avg Likes / Post'}}},animation:{duration:1200}}});
+  new Chart(document.getElementById('c-reelpie').getContext('2d'),{type:'pie',data:{labels:['Achievements 30%','Youth 25%','Fact-checks 20%','Nostalgia 15%','BTS 10%'],datasets:[{data:[30,25,20,15,10],backgroundColor:['rgba(251,191,36,.9)','rgba(132,204,22,.85)','rgba(163,230,53,.75)','rgba(74,222,128,.65)','rgba(253,230,138,.55)'],borderColor:'rgba(0,0,0,.25)',borderWidth:1}]},options:{plugins:{legend:{position:'right',labels:{boxWidth:9,padding:6,font:{size:9}}}},animation:{duration:1300}}});
+  const g=document.getElementById('c-iggrow').getContext('2d');
+  new Chart(g,{type:'line',data:{labels:['Now','M3','M6','M9','M12'],datasets:[{data:[171,250,390,640,950],borderColor:'#84cc16',backgroundColor:mkG(g,'rgba(132,204,22,.38)','rgba(132,204,22,0)',72),fill:true,tension:.4,pointBackgroundColor:'#84cc16',borderWidth:2.5}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v+'K'}},x:{grid:{display:false}}},animation:{duration:1200}}});
+}
+
+function buildCal(){
+  const g=document.getElementById('cal-grid');
+  if(g.children.length)return;
+  ['S','M','T','W','T','F','S'].forEach(d=>{const e=document.createElement('div');e.className='cd';e.style.cssText='background:transparent;color:rgba(253,230,138,.4);font-size:.55rem';e.textContent=d;g.appendChild(e)});
+  [['cr','R'],['cs','S'],['cr','R'],['cp','P'],['cs','S'],['cr','R'],['co',''],['cp','P'],['cr','R'],['cs','S'],['cl','L'],['cr','R'],['cs','S'],['cr','R'],['co',''],['cp','P'],['cr','R'],['cs','S'],['cr','R'],['cp','P'],['cs','S'],['cr','R'],['co',''],['cr','R'],['cs','S'],['cl','L'],['cr','R'],['cp','P'],['cs','S'],['cr','R']].forEach(([cls,lbl])=>{const e=document.createElement('div');e.className='cd '+cls;e.textContent=lbl;g.appendChild(e)});
+}
+
+// S10 — Three platforms
+function s9(){
+  new Chart(document.getElementById('c-tw').getContext('2d'),{type:'bar',data:{labels:['M1','M3','M6','M9','M12'],datasets:[{label:'Reactive %',data:[90,70,50,30,15],backgroundColor:'rgba(239,68,68,.65)',borderRadius:4,stack:'a'},{label:'Proactive %',data:[10,30,50,70,85],backgroundColor:'rgba(251,191,36,.8)',borderRadius:4,stack:'a'}]},options:{plugins:{legend:{position:'bottom',labels:{padding:6}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:100,ticks:{callback:v=>v+'%'}}},animation:{duration:1200}}});
+  const c2=document.getElementById('c-fb').getContext('2d');
+  new Chart(c2,{type:'line',data:{labels:['Now','Q1','Q2','Q3','Q4'],datasets:[{label:'Talking %',data:[3,6,10,16,23],borderColor:'#fbbf24',backgroundColor:mkG(c2,'rgba(251,191,36,.38)','rgba(251,191,36,0)',95),fill:true,tension:.4,pointBackgroundColor:'#fbbf24',borderWidth:2.5}]},options:{plugins:{legend:{display:false}},scales:{y:{max:26,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},animation:{duration:1200}}});
+  const c3=document.getElementById('c-wa').getContext('2d');
+  new Chart(c3,{type:'line',data:{labels:['M0','M2','M4','M6','M9','M12'],datasets:[{label:'HH Reach',data:[0,.3,.8,1.8,3.2,5],borderColor:'#84cc16',backgroundColor:mkG(c3,'rgba(132,204,22,.38)','rgba(132,204,22,0)',95),fill:true,tension:.5,pointBackgroundColor:'#84cc16',borderWidth:2.5}]},options:{plugins:{legend:{display:false}},scales:{y:{max:6,ticks:{callback:v=>v+'M'}},x:{grid:{display:false}}},animation:{duration:1300}}});
+}
+
+// S11 — Roadmap
+function s10(){
+  const cfgs=[{id:'kpi1',data:[50,100,250,450,720,1000],color:'#fbbf24'},{id:'kpi2',data:[.17,.25,.42,.65,.82,1],color:'#84cc16'},{id:'kpi3',data:[3,6,10,16,20,23],color:'#fbbf24'},{id:'kpi4',data:[0,.5,1.5,2.5,3.5,5],color:'#a3e635'}];
+  cfgs.forEach(({id,data,color})=>{
+    const ctx=document.getElementById(id).getContext('2d');
+    new Chart(ctx,{type:'line',data:{labels:['Now','Y1','Y2','Y3','Y4','Y5'],datasets:[{data,borderColor:color,backgroundColor:mkG(ctx,color+'88',color+'11',38),fill:true,tension:.4,borderWidth:2,pointRadius:0}]},options:{plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},animation:{duration:1400}}});
+  });
+  document.querySelectorAll('.kn[data-t]').forEach(el=>{
+    const t=+el.dataset.t,s=el.dataset.s||'';
+    let c=0;const step=t/60;
+    const iv=setInterval(()=>{c=Math.min(c+step,t);el.textContent=(c<1?c.toFixed(1):Math.round(c))+s;if(c>=t)clearInterval(iv)},28);
+  });
+  new Chart(document.getElementById('c-road').getContext('2d'),{type:'bar',data:{labels:['YT Thumbnails','Insta Cleanup','WhatsApp Launch','FB 234 Groups','Follower Parity','Youth Wing','Pre-Election','2031 Victory'],datasets:[{data:[100,95,80,75,60,40,20,5],backgroundColor:['rgba(251,191,36,.95)','rgba(251,191,36,.85)','rgba(132,204,22,.8)','rgba(132,204,22,.7)','rgba(163,230,53,.62)','rgba(74,222,128,.58)','rgba(253,230,138,.52)','rgba(251,191,36,.4)'],borderRadius:8}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:100,ticks:{callback:v=>v+'%'},grid:{color:'rgba(255,255,255,.05)'}},y:{grid:{display:false},ticks:{font:{size:9}}}},animation:{duration:1600}}});
+}
+
+window.addEventListener('load',()=>{
+  initSlide(0);
+  document.getElementById('s1').classList.add('on');
+  // Preload leader panel images
+  ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Palanisamy.jpg/250px-Palanisamy.jpg',
+   'jayalalithaa.jpg'
+  ].forEach(u=>{const i=new Image();i.src=u});
+});
+
+document.getElementById('langBtn').addEventListener('click',function(){
+  this.textContent=this.textContent==='தமிழ்'?'English':'தமிழ்';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spline</title>
