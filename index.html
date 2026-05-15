@@ -316,7 +316,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:58px;display:flex;ju
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
         <div class="gc anim l" style="--d:.1s;flex:1;min-height:0">
-          <div class="h3">🪑 2026 Seat Distribution (234 Total)</div>
+          <div class="h3">🪑 2026 Seat Distribution — TVK 108 · DMK+ 73 · AIADMK+ 53</div>
           <canvas id="c-seat" style="max-height:180px"></canvas>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" class="anim l" style="--d:.22s">
@@ -839,7 +839,7 @@ function s1(){
   const c1=document.getElementById('c-vote').getContext('2d');
   new Chart(c1,{type:'bar',data:{labels:['2016','2021','2026'],datasets:[{data:[40.8,33.3,25],backgroundColor:[mkG(c1,'#fbbf24','#92400e',140),mkG(c1,'#84cc16','#365314',140),mkG(c1,'#ef4444','#7f1d1d',140)],borderRadius:9,borderSkipped:false}]},options:{plugins:{legend:{display:false}},scales:{y:{min:0,max:50,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},animation:{duration:1400}}});
   const c2=document.getElementById('c-seat').getContext('2d');
-  new Chart(c2,{type:'doughnut',data:{labels:['TVK+Alliance','AIADMK','DMK','Others'],datasets:[{data:[135,60,25,14],backgroundColor:['rgba(239,68,68,.85)','rgba(251,191,36,.85)','rgba(132,204,22,.7)','rgba(74,222,128,.4)'],borderColor:'rgba(0,0,0,.3)',borderWidth:2,hoverOffset:6}]},options:{cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8}}},animation:{duration:1400}}});
+  new Chart(c2,{type:'doughnut',data:{labels:['TVK','DMK+','AIADMK+','Others'],datasets:[{data:[108,73,53,0],backgroundColor:['rgba(239,68,68,.85)','rgba(132,204,22,.7)','rgba(251,191,36,.85)','rgba(74,222,128,.4)'],borderColor:'rgba(0,0,0,.3)',borderWidth:2,hoverOffset:6}]},options:{cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8}}},animation:{duration:1400}}});
 }
 
 // S3 — Voter map charts
